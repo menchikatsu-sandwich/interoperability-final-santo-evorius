@@ -1,7 +1,7 @@
 Sistem sederhana untuk manajemen event kampus dan pendaftaran peserta.
 
 ## Fitur
-- CRUD Event (hanya admin)
+- CRUD Event (hanya admin dgn auth)
 - Pendaftaran peserta ke event (dengan pengecekan kuota)
 - Frontend HTML sederhana
 - Dokumentasi otomatis via Swagger
