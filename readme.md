@@ -10,38 +10,63 @@ Sistem sederhana untuk manajemen event kampus dan pendaftaran peserta.
 Gunakan header: `x-token: santo_admin` untuk akses admin.
 
 ## Instalasi
-1. `pip install -r requirements.txt`
-2. Jalankan: `uvicorn main:app --reload`
+
+1. Jalankan perintah:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Jalankan aplikasi:
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
 3. Buka:
-   - API Docs: http://localhost:8000/docs (sebagai admin) (KLIK BUTTON "TRY IT OUT" UNTUK MENJALANKAN FUNC)
-        -Cek Koneksi ke Index
-            -Get / Read Root -> Execute
-        -Tambah Event
-            POST /events
-                Isi header x-token
-                Isi body JSON -> Execute
-        -Cek Event
-            GET /events -> Execute
-        -Update Event
-            PUT /events
-                Isi ID Event
-                Isi header x-token
-                Isi body JSON -> Execute
-        -Delete Event
-            DELETE /events (CASCADE: jadi saat dihapus maka peserta yg terdaftar akan ikut terhapus)
-                Isi ID Event
-                Isi header x-token -> execute
-        -Register Peserta Manual
-            POST /register
-                Isi body JSON -> Execute
-        -Cek Peserta
-            GET /participants → Execute
 
+   * **API DOCS:** [http://localhost:8000/docs](http://localhost:8000/docs) (sebagai admin)
+     *(Klik tombol "TRY IT OUT" untuk menjalankan fungsi)*
 
-   - Frontend: http://localhost:8000/static/index.html
-        -Dapat Melihat Event yang tersedia
+     * **Cek Koneksi ke Index**
 
-        -Isi form → klik “Daftar Sekarang”
-            Lihat pesan sukses/error
-        
-# Folder img berisi screenshoot uji coba
+       * `GET /` → **Execute**
+
+     * **Tambah Event**
+
+       * `POST /events`
+       * Isi header `x-token`
+       * Isi body JSON → **Execute**
+
+     * **Cek Event**
+
+       * `GET /events` → **Execute**
+
+     * **Update Event**
+
+       * `PUT /events`
+       * Isi ID Event
+       * Isi header `x-token`
+       * Isi body JSON → **Execute**
+
+     * **Delete Event**
+
+       * `DELETE /events` *(CASCADE: saat dihapus maka peserta yang terdaftar akan ikut terhapus)*
+       * Isi ID Event
+       * Isi header `x-token` → **Execute**
+
+     * **Register Peserta Manual**
+
+       * `POST /register`
+       * Isi body JSON → **Execute**
+
+     * **Cek Peserta**
+
+       * `GET /participants` → **Execute**
+
+   * **Frontend:** [http://localhost:8000/static/index.html](http://localhost:8000/static/index.html)
+
+     * Dapat melihat event yang tersedia
+     * Isi form → klik **"Daftar Sekarang"**
+     * Lihat pesan sukses/error
+
