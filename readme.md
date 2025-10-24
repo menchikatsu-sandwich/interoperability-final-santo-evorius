@@ -9,8 +9,6 @@ Sistem sederhana untuk manajemen event kampus dan pendaftaran peserta.
 ## Admin Token
 Gunakan header: `x-token: santo_admin` untuk akses admin.
 
-# Folder img berisi screenshoot uji coba
-
 ## Instalasi
 
 1. Jalankan perintah:
@@ -72,3 +70,17 @@ Gunakan header: `x-token: santo_admin` untuk akses admin.
      * Isi form → klik **"Daftar Sekarang"**
      * Lihat pesan sukses/error
 
+## HASIL UJI COBA
+![1. Menambahkan Event](img/1.png)
+![Buat Event](img/2.png)
+![Response sistem](img/3.png)
+![2. Cek Event](img/4.png)
+![3. Hasil di Frontend](img/5.png)
+![4. Pendaftaran Peserta](img/6.png)
+![Notifikasi Alert Berhasil Mendaftar](img/7.png)
+![Tampilan Frontend Sistem Setelah Partisipasi](img/8.png)
+![5. Cek Partisipan](img/9.png)
+![6. Update Event](img/10.png)
+![Hasil Update](img/11.png)
+![7. Delete Event](img/12.png)
+![Hasil Delete](img/13.png)
