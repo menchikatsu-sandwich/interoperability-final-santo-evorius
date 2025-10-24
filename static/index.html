@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistem Event Kampus</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .header {
+      background: linear-gradient(120deg, #1e3c72, #2a5298);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+    }
+    .event-card {
+      transition: transform 0.2s;
+      margin-bottom: 1.2rem;
+    }
+    .event-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .quota-full {
+      opacity: 0.6;
+    }
+    .footer {
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      background-color: #e9ecef;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header text-center">
+    <h1>🎓 Sistem Event Kampus</h1>
+    <p class="lead">Daftar event kampus dan ikuti acara menarik!</p>
+  </div>
+
+  <div class="container">
+    <h2 class="mb-4">📅 Daftar Event Tersedia</h2>
+    <div id="events" class="row">
+      <div class="col-12 text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5">
+
+    <h2 class="mb-4">📝 Daftar Sebagai Peserta</h2>
+    <form id="registerForm" class="row g-3">
+      <div class="col-md-4">
+        <label for="name" class="form-label">Nama Lengkap</label>
+        <input type="text" class="form-control" id="name" required>
+      </div>
+      <div class="col-md-4">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" required>
+      </div>
+      <div class="col-md-4">
+        <label for="event_id" class="form-label">ID Event</label>
+        <input type="number" class="form-control" id="event_id" min="1" required>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-success">Daftar Sekarang</button>
+      </div>
+    </form>
+
+    <div id="message" class="mt-3"></div>
+  </div>
+
+  <div class="footer">
+    <p>© 2025 Campus Event System | UTS Interoperabilitas Sistem</p>
+  </div>
+
+  <script>
+    // Fungsi untuk memuat data event dan peserta
+    async function loadEventsAndParticipants() {
+      try {
+        // Ambil data event
+        const eventsRes = await fetch('/events');
+        if (!eventsRes.ok) throw new Error('Gagal memuat daftar event');
+        const events = await eventsRes.json();
+
+        // Ambil data peserta
+        const participantsRes = await fetch('/participants');
+        if (!participantsRes.ok) throw new Error('Gagal memuat daftar peserta');
+        const participants = await participantsRes.json();
+
+        // Hitung jumlah peserta per event
+        const participantCount = {};
+        participants.forEach(p => {
+          participantCount[p.event_id] = (participantCount[p.event_id] || 0) + 1;
+        });
+
+        // Render event dengan jumlah peserta
+        const container = document.getElementById('events');
+        if (events.length === 0) {
+          container.innerHTML = `<div class="col-12"><div class="alert alert-info">Belum ada event tersedia.</div></div>`;
+          return;
+        }
+
+        container.innerHTML = events.map(e => {
+          const current = participantCount[e.id] || 0;
+          const isFull = current >= e.quota;
+          const badgeClass = isFull ? 'bg-danger' : 'bg-success';
+          const statusText = isFull ? 'Penuh' : 'Tersedia';
+
+          return `
+            <div class="col-md-6 col-lg-4">
+              <div class="card event-card ${isFull ? 'quota-full' : ''}">
+                <div class="card-body">
+                  <h5 class="card-title">${e.title}</h5>
+                  <p class="card-text">
+                    📅 <strong>${new Date(e.date).toLocaleDateString('id-ID')}</strong><br>
+                    📍 ${e.location}<br>
+                    👥 Peserta: <strong>${current}/${e.quota}</strong>
+                  </p>
+                  <span class="badge ${badgeClass}">${statusText}</span>
+                  <p class="mt-2 mb-0"><small class="text-muted">ID Event: ${e.id}</small></p>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        document.getElementById('events').innerHTML = 
+          `<div class="col-12"><div class="alert alert-warning">Error: ${err.message}</div></div>`;
+      }
+    }
+
+    // Handle form pendaftaran
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const event_id = parseInt(document.getElementById('event_id').value);
+      const messageEl = document.getElementById('message');
+
+      try {
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, event_id })
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          messageEl.innerHTML = `<div class="alert alert-success">✅ Pendaftaran berhasil! ID Peserta: ${result.id}</div>`;
+          document.getElementById('registerForm').reset();
+          // Refresh tampilan setelah daftar
+          loadEventsAndParticipants();
+        } else {
+          throw new Error(result.detail || 'Gagal mendaftar');
+        }
+      } catch (err) {
+        messageEl.innerHTML = `<div class="alert alert-danger">❌ ${err.message}</div>`;
+      }
+    });
+
+    // Inisialisasi saat halaman dimuat
+    loadEventsAndParticipants();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
