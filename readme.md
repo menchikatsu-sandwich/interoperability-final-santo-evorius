@@ -9,6 +9,8 @@ Sistem sederhana untuk manajemen event kampus dan pendaftaran peserta.
 ## Admin Token
 Gunakan header: `x-token: santo_admin` untuk akses admin.
 
+# Folder img berisi screenshoot uji coba
+
 ## Instalasi
 
 1. Jalankan perintah:
